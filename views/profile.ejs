@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta http-equiv="X-UA-Compatible" content="ie=edge">
+ <title>Yönetici Paneli</title>
+
+ <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+ <link rel="stylesheet" 
+ href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+ <style>
+  html{
+   padding:50px;
+  }
+ </style>
+</head>
+<body>
+ <div class="container">
+  <div class="page-header text-center">
+   <h1>Yönetici Paneli</h1>
+   <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+  </div>
+
+  <div class="row">
+   <div class="col-sm-12">
+    <div class="well">
+     <h3><span class="fa fa-user"></span> Merhaba, bugün nasılsın?</h3>
+
+     <p>
+     </p>
+    </div>
+   </div>
+  </div>
+ </div>
+ <div>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+            <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+        
+            
+        
+            <script type="text/javascript">
+        
+        
+            
+               
+                $(document).ready(function () {
+                    $('.myTr').bind("mouseover", function(){
+            var color = $(this).css("background-color");
+  
+            $(this).css("background","#FFFF00");
+  
+            $(this).bind("mouseout", function(){
+              $(this).css("background", color);
+            });
+          })
+
+            
+                
+                });  
+        
+        
+            </script>
+            <style>
+                    table, th, td {
+                      margin-top: 25px;
+                      border: 1px solid black;
+                      border-collapse: collapse;
+                    }
+                    th, td {
+                      padding: 5px;
+                      text-align:center;    
+                    }
+                    </style>
+            <title>Yönetici Paneli</title>
+        </head>
+        <body onload=ShowProperties()>
+          <form action="/propertyEklendi" method="post">
+            <div class="container">
+                        <div class="row">
+                          <div class="col-sm-3" id="leftContent">
+                        
+                          </div>
+                          <div class="col-sm-9">
+                            <h1 style="text-align: center;">Kayıtlı mekanlar</h1>
+                           
+                                <table id="myTable">
+                                        <tr>
+                                                <th>il</th>
+                                                <th>ilçe</th>
+                                                <th>enlem</th>
+                                                <th>boylam</th>
+                                                <th>mekan adı</th>
+                                                <th>içeriği</th>
+                                                <th>açık adresi</th>
+                                                <th>iletişim kişi </th>
+                                                <th>telefon </th>
+                                                <th>mail </th>
+                                                <th>Durum</th>
+                                                                   
+                                        </tr>
+                                 
+                                    </table>
+                                     
+                          </div>
+                           
+                
+                        </div>
+                      </div>
+                    </form>
+        
+                     
+        </body>
+        <script>
+        function ShowProperties()
+        {
+          var onaylananSayi=0;
+
+var bekleyenSayi=0;
+
+var reddedilen=0;
+var durum="SORUNLU";
+            $.getJSON("./Mekanlar",function(newData){     
+        //                $("#selectIlceler").empty();
+                      
+       for (var i = 0; i < newData.Mekanlar.length; i++) {
+       
+         if(newData.Mekanlar[i].durumu==1)
+         {durum="BEKLEMEDE";bekleyenSayi++} 
+         
+         if(newData.Mekanlar[i].durumu==2) {
+          durum="FAAL";onaylananSayi++;
+         }
+        
+         if(newData.Mekanlar[i].durumu==3) {
+         durum="PASİF";reddedilen++;
+        }
+             $('#myTable tr:last').after(' <tr class="myTr" value="'+ newData.Mekanlar[i].id+'" ><td>'+ newData.Mekanlar[i].il +'</td><td >'+newData.Mekanlar[i].ilce +'</td><td>'+newData.Mekanlar[i].enlem +'</td><td>'+newData.Mekanlar[i].boylam +'</td><td>'+newData.Mekanlar[i].adi +'</td><td>'+newData.Mekanlar[i].icerik+'</td><td>'+newData.Mekanlar[i].adres +'</td><td>'+newData.Mekanlar[i].iletisimkisi +'</td><td>'+newData.Mekanlar[i].telefon +'</td><td>'+newData.Mekanlar[i].eposta +'</td><td>'+durum+'</td></tr>');
+       }       
+       
+       
+              
+       $("#leftContent").html('Bu sayfada '+ newData.Mekanlar.length +' kayıt var.<br> <a href="/bekleyenler" type="submit">Bekleyenleri göster ('+ bekleyenSayi+')</a><br><a><a href="/onaylananlar" type="submit">Onaylananları Göster ('+ onaylananSayi+')</a><br><a href="/reddedilenler" type="submit">Reddedilenleri Göster ('+ reddedilen+')</a></p>'); 
+
+                  });    
+        }
+        </script>
+        </html>
+        
+ </div>
+</body>
+</html>

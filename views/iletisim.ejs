@@ -1,0 +1,189 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/kres.css">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+<div id="navbar" class="navbar">
+    <div class="top hs">
+        <div class="logo"><a href="/" title="Ana Sayfa"><img src="images/mainlogo.png" alt="logo"></a></div>
+        <div class="ust-menu">
+            <div style="margin-top:20px; color: darkblue"  class="slogan">Türkiye'nin En Büyük Yerel Satış Platformu</div>
+        </div>
+    </div>
+
+
+    <div class="menu renk1">
+        <a class="hl hm" href="header.html" title="Ana Sayfa">
+            <a class="btn hs" href="/">Ana Sayfa</a>
+            <a class="btn hs" href="/urunekle"><span class="blink">Ücretsiz </span>Yerel Ürün Ekle</a>
+            <a class="btn hs" href="/iletisim">İletişim</a>
+            <a class="btn hs giris" onclick="toggleGiris()">Giriş</a>
+            <i id="menubtn" class="fa fa-bars hl hm" onclick="menu_open()"></i>
+    </div>
+</div>
+<script>
+    // Menu
+    function menu_open() {
+        document.getElementById("mobil-menu-wrap").style.display = "block";
+        document.getElementById("mobil-menu").style.right = "0";
+    }
+    function menu_close() {
+        document.getElementById("mobil-menu-wrap").style.display = "none";
+        document.getElementById("mobil-menu").style.right = "-60%";
+    }
+
+    // Menu Resize
+    nav = document.getElementById("navbar");
+    window.onscroll = function() {menuResize()};
+
+    function menuResize() {
+
+        if(document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
+            nav.classList.add('menu-scroll');
+        } else {
+            nav.classList.remove('menu-scroll');
+        }
+    }
+
+    // Giriş
+    function toggleGiris() {
+        div = document.getElementById("giris-modal");
+        if (div.style.display == "none") {
+            div.style.display = "block";
+        } else {
+            div.style.display = "none";
+        }
+    }
+
+    // Get the giris
+    var giris = document.getElementById('giris-modal');
+
+    var whatsappmodal = document.getElementById('whatsapp-modal');
+
+    //for ios
+    window.ontouchstart = function(event) {
+        if (event.target == giris) {
+            giris.style.display = "none";
+        }
+    }
+</script>
+
+<div class="main-container">
+    <div id="giris-modal" class="modal" style="display:none;">
+        <div class="modal-content renk1">
+            <form id="login" action="/iletisim.html" method="post" accept-charset="UTF-8">
+                <label for="luser">Eposta:</label>
+                <input type="text" name="user" id="luser" required="">
+                <label for="lpassword">Şifre:</label>
+                <input type="password" name="password" id="lpassword" required="">
+
+                <input type="hidden" name="submitted" id="submitted" value="1">
+                <input type="hidden" name="redirurl" value="/iletisim.html">
+
+                <p id="resetpwd" class="fs">Şifrenizi hatırlamıyorsanız <a class="fs" href="reset-pwd-req.php">tıklayın</a></p>
+                <p id="remember" class="fs"><label><input type="checkbox" name="remember" value="1" checked=""> Beni Hatırla</label></p>
+                <a class="btn fs" href="iletisim.html">Ücretsiz Üye Ol</a>
+                <button class="btn fs renk1" type="submit" name="login">Giriş</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="padding-side padding-footer">
+        <div class="center">
+            <form id="iletisim" class="card" action="/iletisim.html" method="post" style="text-align:left; padding:2.6vw;">
+                <h3 style="margin-left:150px;">İletişim</h3>
+
+                <input type="hidden" name="contact" value="1">
+
+                <p class="aciklama"><span class="zorunlu">*</span> ile işaretlenmiş alanlar zorunludur.</p>
+
+                <p>
+                    <label for="ad">Ad<span class="zorunlu"> *</span></label>
+                    <input type="text" name="ad" id="ad" value="" maxlength="20" required="">
+                </p>
+                <p>
+                    <label for="soyad">Soyad<span class="zorunlu"> *</span></label>
+                    <input type="text" name="soyad" id="soyad" value="" maxlength="20" required="">
+                </p>
+                <p>
+                    <label for="eposta">E-Posta<span class="zorunlu"> *</span></label>
+                    <input type="email" name="eposta" id="eposta" value="" maxlength="50" required="">
+                </p>
+                <p>
+                    <label for="ceptel">Cep Telefonu</label>
+                    <input type="tel" name="ceptel" id="ceptel" maxlength="14" placeholder="05-- --- -- --" value="">
+                </p>
+                <p>
+                    <label for="konu">Konu<span class="zorunlu"> *</span></label>
+                    <select name="konu" id="konu">
+                        <option value="NULL">Seçiniz</option>
+                        <option value="oneri">Öneri</option>
+                        <option value="hata">Hata</option>
+                        <option value="tesekkur">Teşekkür</option>
+                        <option value="sikayet">Şikayet</option>
+                        <option value="diger">Diğer</option>
+                    </select>
+                    <input type="text" name="diger" id="diger" value="" maxlength="20" style="display:none;">
+                </p>
+                <p>
+                    <label for="mesaj">Mesajınız<span class="zorunlu"> *</span></label>
+                    <textarea style="background-color:#9df5f5 ;" name="mesaj" id="mesaj" rows="15" cols="20" maxlength="1500" required=""></textarea>
+                </p>
+                <input type="checkbox" name="kopya" id="kopya" value="1">
+                <label for="kopya" style="width:unset;">Mesajın bir kopyası eposta adresime gönderilsin</label>
+                <input class="btnstd" name="submit" type="submit" value="Gönder" style="width:30%; margin-left:35%; margin-right:35% ;">
+
+            </form>
+            <script>
+                var frmvalidator  = new Validator("iletisim");
+                frmvalidator.addValidation("ad","req","Lütfen Adınızı girin");
+                frmvalidator.addValidation("soyad","req","Lütfen Soyadınızı girin");
+                frmvalidator.addValidation("eposta","req","Lütfen Eposta Adresi girin");
+                frmvalidator.addValidation("eposta","eposta","Lütfen geçerli bir eposta adresi girin");
+                frmvalidator.addValidation("konu","dontselect=NULL","Lütfen bir Konu seçin");
+                frmvalidator.addValidation("mesaj","req","Lütfen Mesajınızı girin");
+            </script>
+        </div>
+    </div>
+</div>
+
+<div id="footer-wrapper">
+    <footer>
+        <div class="skew-wrap-r"><div class="skew-renk2"></div></div>
+        <div class="equalHMVWrap">
+
+            <div class="equalHMV3" style="width:67%; margin:0.8vw 0; text-align:center;">
+            </div>
+            <div class="equalHMV3" style="width:33%; margin:0.8vw 0;">
+                <div style="height:100%; display:flex; align-items:center; padding:2vw 0;">
+                    <p style="width:100%; text-align:center; margin:0;">
+                        <a href="https://www.facebook.com/enesowil/" target="_blank"><i class="fa fa-facebook-official fa-2x"></i></a>
+                        <a href="https://www.instagram.com/enesowil" target="_blank"><i class="fa fa-instagram fa-2x"></i></a>
+                        <a href="https://twitter.com/enesowil" target="_blank"><i class="fa fa-twitter fa-2x"></i></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div class="copyright">
+        <p class="font4" style="margin:0;">Copyright © 2019 - 2020 | <a href="header.html">4our</a>  | Her Hakkı Saklıdır</p>
+    </div>
+
+</div>
+</div>
+
+
+
+<script>  var giris = document.getElementById('giris-modal');
+    window.onclick = function(event) {
+        if (event.target == giris) {
+            giris.style.display = "none";
+        }
+    }</script>
+</body>
+</html>

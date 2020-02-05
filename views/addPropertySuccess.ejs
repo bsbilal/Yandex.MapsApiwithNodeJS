@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+    
+
+    <script type="text/javascript">
+
+
+	
+       
+        $(document).ready(function () {
+		
+	
+          $("#myTable").on('click', '#AddNew', function (){
+		//idye gore
+	  
+
+	  
+	  
+  var evID = $(this).closest('tr').attr("value");
+
+  $('input#guncelllenecekid').val(evID);
+	
+        });  
+    
+        $("#myTable").on('click', '#DeleteRow', function (){
+
+	  
+  var evID = $(this).closest('tr').attr("value");
+
+  $('input#guncelllenecekid').val(-evID);
+	
+        });  
+		});  
+
+
+    </script>
+    <style>
+            table, th, td {
+              margin-top: 25px;
+              border: 1px solid black;
+              border-collapse: collapse;
+            }
+            th, td {
+              padding: 5px;
+              text-align:center;    
+            }
+            </style>
+    <title>Document</title>
+</head>
+<body onload=ShowProperties()>
+  <form action="/propertyEklendi" method="post">
+    <div class="container">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h3>İşlemler</h3>
+                    <form action="/yonlendirme" method="post">
+                    <div id="sayilar"></div>
+                 
+                  </form>
+                  
+                  </div>
+                  </div>
+                  <div class="col-sm-9">
+                      <H1>Tablo başarıyla güncellendi...!</H1>
+                        <table id="myTable">
+                                <tr>
+                                        <th>il</th>
+                                        <th>ilçe</th>
+                                        <th>enlem</th>
+                                        <th>boylam</th>
+                                        <th>mekan adı</th>
+                                        <th>içeriği</th>
+									    <th>açık adresi</th>
+                                        <th>iletişim kişi </th>
+										<th>telefon </th>
+										<th>mail </th>
+										<th> İşlem</th>
+                                                           
+                                </tr>
+                         
+                            </table>
+                             
+                  </div>
+                
+                </div>
+              </div>
+  </form>
+             
+</body>
+<script>
+function ShowProperties()
+{
+    $.getJSON("./Mekanlar",function(newData){     
+//                $("#selectIlceler").empty();
+       var durum="reddedildi";
+       
+for (var i = 0; i < newData.Mekanlar.length; i++) {
+
+  if(newData.Mekanlar[i].durumu==1) 
+  durum="BEKLEMEDE";
+  if(newData.Mekanlar[i].durumu==2) 
+  durum="FAAL";
+  if(newData.Mekanlar[i].durumu==3) 
+  durum="PASİF";
+
+      $('#myTable tr:last').after(' <tr class="myTr" value="'+ newData.Mekanlar[i].id+'" ><td>'+ newData.Mekanlar[i].il +'</td><td >'+newData.Mekanlar[i].ilce +'</td><td>'+newData.Mekanlar[i].enlem +'</td><td>'+newData.Mekanlar[i].boylam +'</td><td>'+newData.Mekanlar[i].adi +'</td><td>'+newData.Mekanlar[i].icerik+'</td><td>'+newData.Mekanlar[i].adres +'</td><td>'+newData.Mekanlar[i].iletisimkisi +'</td><td>'+newData.Mekanlar[i].telefon +'</td><td>'+newData.Mekanlar[i].eposta +'</td><td>'+durum+'</td></tr>');
+}       
+
+
+  
+        $("#sayilar").html("<p>Toplam kayıt sayısı : "+newData.Mekanlar.length+"<br><a href='/mekanlarigoster' type='submit'>Bekleyenleri Göster</a></p><br><p><a href='/mekanred'>Reddedilenleri Göster</a></p>");
+
+          });    
+}
+</script>
+
+</html>

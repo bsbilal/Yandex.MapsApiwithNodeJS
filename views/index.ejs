@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/kres.css">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <title>Ana Sayfa</title>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=en_RU&amp;apikey=aa8e2e43-c0e8-435d-9333-8c841f0d0016&lang=en_US" type="text/javascript"></script>
+    <script src="https://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>jQuery(function () {
+            ymaps.ready(init);
+        });
+        function init () {
+            var map = new ymaps.Map('map', {
+                    center: [39.9334, 32.8597],
+                    zoom: 10
+                }, {
+                    searchControlProvider: 'yandex#search'
+                });
+
+
+                myGeoObject = new ymaps.GeoObject();
+                
+
+			
+                $.getJSON("./Mekanlar",function(newData){            
+                for (var i = 0; i < newData.Mekanlar.length; i++) {
+                    if(newData.Mekanlar[i].il="ANKARA"&&newData.Mekanlar[i].durumu==2) {                map.geoObjects
+                .add(myGeoObject)
+                .add(new ymaps.Placemark([newData.Mekanlar[i].enlem,newData.Mekanlar[i].boylam], {
+                    balloonContent:"<strong>Yer adı :</strong>"+newData.Mekanlar[i].adi +   "                <strong>İçerik :</strong>"+ newData.Mekanlar[i].icerik+"  <strong>Açık adres :</strong>"+newData.Mekanlar[i].adres+"  <strong>İletişim Telefon : </strong>"+newData.Mekanlar[i].telefon+"  <strong>İletişim Mail : </strong>"+newData.Mekanlar[i].eposta
+                }, {
+                    preset: 'islands#icon',
+                    iconColor: '#660099'
+                })) ;
+            }		
+        }
+    });
+
+
+                // Creating a geo object with the "Point" geometry type.
+        }
+    </script>
+    <style>
+        body, html {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            font-family: Arial;
+        }
+        #map {
+            width: 100%;
+            height: 60%;
+        }
+
+        .header {
+            padding: 5px;
+        }
+    </style>
+    <script>
+
+        function haritaMerkezi (enlem,boylam) {
+            $("#map").empty();
+
+            jQuery(function () {
+                ymaps.ready(init);
+            });
+            function init () {
+
+                var intIl = Number(document.getElementById("selectIller").value);
+        intIl=intIl+1;
+        var ils = $("#selectIller option:selected").text();
+        var ilces = $("#selectIlceler option:selected").text();
+
+        var map = new ymaps.Map('map', {
+                        center: [enlem,boylam],
+                        zoom: 10
+                    }, {
+                        searchControlProvider: 'yandex#search'
+                    });
+
+                    myGeoObject = new ymaps.GeoObject();
+                
+
+			
+                    $.getJSON("./Mekanlar",function(newData){            
+                    for (var i = 0; i < newData.Mekanlar.length; i++) {
+                        if(newData.Mekanlar[i].il==ils&&newData.Mekanlar[i].ilce&&newData.Mekanlar[i].durumu==2) {                map.geoObjects
+                    .add(myGeoObject)
+                    .add(new ymaps.Placemark([newData.Mekanlar[i].enlem,newData.Mekanlar[i].boylam], {
+                        balloonContent:"<strong>Yer adı :</strong>"+newData.Mekanlar[i].adi +   "                <strong>İçerik :</strong>"+ newData.Mekanlar[i].icerik+"  <strong>Açık adres :</strong>"+newData.Mekanlar[i].adres+"  <strong>İletişim Telefon : </strong>"+newData.Mekanlar[i].telefon+"  <strong>İletişim Mail : </strong>"+newData.Mekanlar[i].eposta
+                    }, {
+                        preset: 'islands#icon',
+                        iconColor: '#0095b6'
+                    })) ;
+                }		
+            }
+        });
+
+  
+       
+        // Creating a geo object with the "Point" geometry type.
+
+
+
+            }}
+        
+    </script>
+    <style>
+        body, html {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            font-family: Arial;
+        }
+        #map {
+            width: 100%;
+            height: 80%;
+        }
+
+      
+        
+        .header {
+            padding: 5px;
+        }
+    </style>
+    
+</head>
+<body onload="bindIller()">
+<div id="navbar" class="navbar">
+    <div class="top hs">
+        <div class="logo"><a href="/" title="Ana Sayfa"><img src="images/mainlogo.png" alt="logo"></a></div>
+        <div class="ust-menu">
+            <div style="margin-top:20px; color: darkblue"  class="slogan">Türkiye'nin En Büyük Yerel Satış Platformu</div>
+        </div>
+    </div>
+
+
+    <div class="menu renk1">
+        <a class="hl hm" href="index.php" title="Ana Sayfa"><img src="images/main.jpg" alt="logo"></a>
+        <a style="color: blue;" class="btn hs" href="/">Ana Sayfa</a>
+        <a style="color: blue;" class="btn hs" href="/urunekle"><span class="blink">Ücretsiz </span>Yerel Mekan Ekle</a>
+        <i id="menubtn" class="fa fa-bars hl hm" onclick="menu_open()"></i>
+    </div>
+</div>
+<script>
+    // Menu
+    function menu_open() {
+        document.getElementById("mobil-menu-wrap").style.display = "block";
+        document.getElementById("mobil-menu").style.right = "0";
+    }
+    function menu_close() {
+        document.getElementById("mobil-menu-wrap").style.display = "none";
+        document.getElementById("mobil-menu").style.right = "-60%";
+    }
+
+    // Menu Resize
+    nav = document.getElementById("navbar");
+    window.onscroll = function() {menuResize()};
+
+    function menuResize() {
+
+        if(document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
+            nav.classList.add('menu-scroll');
+        } else {
+            nav.classList.remove('menu-scroll');
+        }
+    }
+
+    // Giriş
+    function toggleGiris() {
+        div = document.getElementById("giris-modal");
+        if (div.style.display == "none") {
+            div.style.display = "block";
+        } else {
+            div.style.display = "none";
+        }
+    }
+
+    // Get the giris
+
+
+
+    var whatsappmodal = document.getElementById('whatsapp-modal');
+
+    //for ios
+    window.ontouchstart = function(event) {
+        if (event.target == giris) {
+            giris.style.display = "none";
+        }
+    }
+</script>
+<div class="main-container" style="padding-top: 8.5vw;">
+
+    <div id="giris-modal" class="modal" style="display:none;">
+        <div class="modal-content renk1">
+            <form id="login" action="/iletisim.html" method="post" accept-charset="UTF-8">
+                <label for="luser">Eposta:</label>
+                <input type="text" name="user" id="luser" required="">
+                <label for="lpassword">Şifre:</label>
+                <input type="password" name="password" id="lpassword" required="">
+
+                <input type="hidden" name="submitted" id="submitted" value="1">
+                <input type="hidden" name="redirurl" value="/iletisim.html">
+
+                <p id="resetpwd" class="fs">Şifrenizi hatırlamıyorsanız <a class="fs" href="reset-pwd-req.php">tıklayın</a></p>
+                <p id="remember" class="fs"><label><input type="checkbox" name="remember" value="1" checked=""> Beni Hatırla</label></p>
+                <a class="btn fs" href="iletisim.html">Ücretsiz Üye Ol</a>
+                <button class="btn fs renk1" type="submit" name="login">Giriş</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="genel-arama">
+        <div class="opacity">
+        </div>
+        <form action="/yerleriGoster" method="post">
+            <div class="arama-cubugu merkez">
+                <select id="selectIller" onchange="bindIlceler()"></select>
+                <select id="selectIlceler" onchange="goArea()" >    </select>
+
+              
+                <input name="il_id" type="hidden" value="">
+                <input name="locstatus" id="locstatus" type="hidden" value="0">
+                
+                <br>
+
+            </div>
+        </form>
+
+    </div>
+
+    <div class="sonuc-adet"><span>Yerel Üretim Yerleri</span></div>
+
+    <div id="grow">
+        <div class="measuringWrapper">
+            <div id="detayli-arama" class="detayli-arama">
+                <form action="heaader.html   " method="post">
+                        <div id="yasal-uyarı" class="padding-side hl hm hs">
+                            <p>Yasal Uyarı:	&#8203;İnternet sitemizde sunulan/yer alan üçüncü kişilerden alınan tüm içerik, görüş ve bilgilerin doğruluğu, eksiksiz ve değişmez olduğu sitemiz tarafından garanti edilmemektedir. Bu nedenle, sitemizden elde edilen içerik, görüş ve bilgilere dayanarak hareket etmeden önce içerik, görüş ve bilgilerin doğruluğunu kontrol etmeniz ve bu içerik, görüş ve bilgilere dayanarak alacakları kararları bu kapsamda vermeleri önerilir.<br>
+                                www.anaokuluvekresler.com sitesinde direkt ya da dolaylı yoldan diğer sitelere, bilgi verme amacıyla bağlantı (link) verilebilir. Kullanıcı; site üzerindeki linklerin kaynakları üzerinde Anaokulu&amp;Kreşler.com’nun hiçbir denetim ve kontrolü olmadığı için, linklerin gösterdiği web sitelerinin veya kaynakların ulaşabilirliğinden ve doğruluğundan sorumlu olmadığını ve bu web siteleri ve kaynaklar üzerinde bulunan veya bunlardan elde edilebilen hiçbir içerik, ürün veya diğer materyalden sorumlu olmadığını kabul eder. Kullanıcı ayrıca Anaokulu&amp;Kreşler.com’un böyle herhangi bir web sitesi veya kaynak üzerinde veya bunlar yoluyla elde edilebilen herhangi bir bilgi, içerik, mal veya hizmete güvenerek veya bunlar tarafından veya bunların kullanımı ile bağlantılı olarak neden olunan ya da neden olunduğu iddia edilen herhangi bir zarar veya kayıptan doğrudan veya dolaylı olarak sorumlu olmadığını kabul eder.</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <h1></h1>
+            <div id="footer-wrapper">
+                <footer>
+                    <div class="skew-wrap-r"><div class="skew-renk2"></div></div>
+                    <div class="equalHMVWrap">
+
+                        <div class="equalHMV3" style="width:67%; margin:0.8vw 0; text-align:center;">
+                        </div>
+                        <div class="equalHMV3" style="width:33%; margin:0.8vw 0;">
+                            <div style="height:100%; display:flex; align-items:center; padding:2vw 0;">
+                                <p style="width:100%; text-align:center; margin:0;">
+                                    <a href="https://www.facebook.com/enesowil/" target="_blank"><i class="fa fa-facebook-official fa-2x"></i></a>
+                                    <a href="https://www.instagram.com/enesowil" target="_blank"><i class="fa fa-instagram fa-2x"></i></a>
+                                    <a href="https://twitter.com/enesowil" target="_blank"><i class="fa fa-twitter fa-2x"></i></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                <div class="copyright">
+                    <p class="font4" style="margin:0;">Copyright © 2019 - 2020 | <a href="header.html">4our</a>  | Her Hakkı Saklıdır</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="map"></div>
+
+
+</body>
+<script>  var giris = document.getElementById('giris-modal');
+    window.onclick = function(event) {
+        if (event.target == giris) {
+            giris.style.display = "none";
+        }
+    }</script>
+<script src="markerclusterer.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+
+    function bindIller()
+    {
+        $.getJSON("./iller",function(newData){
+            $("#selectIlceler").empty();
+
+            var select = document.getElementById("selectIller");
+
+            for (var i = 0; i < newData.iller.length; i++) {
+                select.options[select.options.length] = new Option(newData.iller[i].il, i);
+
+            }
+
+        });
+    }
+
+
+    function bindIlceler()   {
+
+        $("#selectIlceler").empty();
+
+        var intIl = Number(document.getElementById("selectIller").value);
+
+        var selectilcelerr = document.getElementById("selectIlceler");
+
+        var il = $("#selectIller option:selected").text();
+
+
+        
+
+
+        intIl=intIl+1;
+        $.getJSON("./ilceler",function(newData2){
+            var y=0;
+            for (var i = 0; i < newData2.ilceler.length; i++) {
+
+                if(intIl==newData2.ilceler[i].il_id&&il!=newData2.ilceler[i].adi)  {
+                    console.log(intIl+"-"+newData2.ilceler[i].il_id);
+                    selectilcelerr.options[selectilcelerr.options.length]
+                        = new Option(newData2.ilceler[i].adi,y);
+                    y++; }
+
+
+            }
+
+
+        });
+
+    }
+
+    function goArea()   {
+
+
+var intIl = Number(document.getElementById("selectIller").value);
+intIl=intIl+1;
+
+var selectedIlce=$( "#selectIlceler option:selected" ).text();
+$('input[name=propertyPlace]').val(selectedIlce);
+
+
+var enlem;
+var boylam;
+
+
+$.getJSON("./ilceler",function(newData3){ 
+        var y=0;
+          for (var i = 0; i < newData3.ilceler.length; i++) {  
+              if(intIl==newData3.ilceler[i].il_id&&selectedIlce==newData3.ilceler[i].adi)  {
+                enlem=newData3.ilceler[i].enlem;
+                boylam=newData3.ilceler[i].boylam; 
+                break;               }       
+
+      }
+      haritaMerkezi(enlem,boylam);
+
+          
+    });
+
+}
+  </script>
+</html>

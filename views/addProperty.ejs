@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>   <title>Yeni Mekan ekleme.</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!--
+        Set your own API-key. Testing key is not valid for other web-sites and services.
+        Get your API-key on the Developer Dashboard: https://developer.tech.yandex.ru/keys/
+    -->
+    <script src="https://api-maps.yandex.ru/2.1/?lang=en_RU&amp;apikey=aa8e2e43-c0e8-435d-9333-8c841f0d0016&lang=en_US" type="text/javascript"></script>
+    <script src="https://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+    
+    function haritaMerkezi (enlem,boylam) {
+        $('input[name=propertyPlate]').val(Number(document.getElementById("selectIller").value)+1);
+
+        $("#map").empty();
+
+    jQuery(function () {
+            ymaps.ready(init);
+        });
+        function init () {
+            var map = new ymaps.Map('map', {
+                    center: [enlem,boylam],
+                    zoom: 10
+                }, {
+                    searchControlProvider: 'yandex#search'
+                }),
+
+                // Creating a geo object with the "Point" geometry type.
+
+
+                markerElement = jQuery('#marker'),
+                dragger = new ymaps.util.Dragger({
+                    // Dragger will automatically run when the user clicks on the 'marker' element.
+                    autoStartElement: markerElement[0]
+                }),
+                // The offset of the marker relative to the cursor.
+                markerOffset,
+                markerPositionn;
+
+            dragger.events
+                .add('start', onDraggerStart)
+                .add('move', onDraggerMove)
+                .add('stop', onDraggerEnd);
+
+
+            myGeoObject = new ymaps.GeoObject({
+                // The geometry description.
+                geometry: {
+                    type: "Point",
+                    coordinates: [40.142731, 29.978966]
+                },
+                // Properties.
+                properties: {
+                    // The placemark content.
+                    iconContent: 'I\'m draggable',
+                    hintContent: 'Come on, drag already!'
+                }
+            }, {
+                /**
+                 * Options.
+                 * The placemark's icon will stretch to fit its contents.
+                 */
+                preset: 'islands#blackStretchyIcon',
+                // The placemark can be dragged.
+                draggable: true
+            });
+        
+          
+
+            function onDraggerStart(event) {
+                var offset = markerElement.offset(),
+                    position = event.get('position');
+                // Saving the offset of the marker relative to the drag starting point.
+                markerOffset = [
+                    position[0] - offset.left,
+                    position[1] - offset.top
+                ];
+                markerPosition = [
+                    position[0] - markerOffset[0],
+                    position[1] - markerOffset[1]
+                ];
+
+                applyMarkerPosition();
+            }
+
+            function onDraggerMove(event) {
+                applyDelta(event);
+            }
+
+            function onDraggerEnd(event) {
+                applyDelta(event);
+                markerPosition[0] += markerOffset[0];
+                markerPosition[1] += markerOffset[1];
+                // Converting page coordinates to global pixel coordinates.
+                var markerGlobalPosition = map.converter.pageToGlobal(markerPosition),
+                    // Getting the center of the map in global pixel coordinates.
+                    mapGlobalPixelCenter = map.getGlobalPixelCenter(),
+                    // Getting the size of the map container on the page.
+                    mapContainerSize = map.container.getSize(),
+                    mapContainerHalfSize = [mapContainerSize[0] / 2, mapContainerSize[1] / 2],
+                    // Calculating the map boundaries in global pixel coordinates.
+                    mapGlobalPixelBounds = [
+                        [mapGlobalPixelCenter[0] - mapContainerHalfSize[0], mapGlobalPixelCenter[1] - mapContainerHalfSize[1]],
+                        [mapGlobalPixelCenter[0] + mapContainerHalfSize[0], mapGlobalPixelCenter[1] + mapContainerHalfSize[1]]
+                    ];
+                // Checking that the dragger finished working in a visible area of the map.
+                if (containsPoint(mapGlobalPixelBounds, markerGlobalPosition)) {
+                    // Now we'll convert the global pixel coordinates to geocoordinates with the current zoom level of the map.
+                    var geoPosition = map.options.get('projection').fromGlobalPixels(markerGlobalPosition, map.getZoom());
+                    var str = geoPosition.join('-');
+                    var positions = str.split('-');
+                    
+                    
+        
+                    $('input[name=propertyEnlem]').val(positions[0]);
+                    $('input[name=propertyBoylam]').val(positions[1]);
+
+
+
+                }
+            }
+
+            function applyDelta (event) {
+                // The 'delta' field contains the difference between the positions of the current and previous dragger events.
+                var delta = event.get('delta');
+                markerPosition[0] += delta[0];
+                markerPosition[1] += delta[1];
+                applyMarkerPosition();
+            }
+
+            function applyMarkerPosition () {
+                markerElement.css({
+                    left: markerPosition[0],
+                    top: markerPosition[1]
+                });
+            }
+
+            function containsPoint (bounds, point) {
+                return point[0] >= bounds[0][0] && point[0] <= bounds[1][0] &&
+                    point[1] >= bounds[0][1] && point[1] <= bounds[1][1];
+            }
+
+        }}
+    </script>
+    <style>
+        body, html {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            font-family: Arial;
+        }
+        #map {
+            width: 100%;
+            height: 60%;
+        }
+
+        #marker {
+            background-image: url('pin.png');
+            width: 33px;
+            height: 36px;
+            position: absolute;
+        }
+        .header {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body onload="haritaMerkezi(38,38),bindIller()">
+    <select id="selectIller" onchange="bindIlceler()"></select>
+
+    <label>İlçe seçin</label>
+
+    <select id="selectIlceler" onchange="goArea()" >    </select>
+
+<div id="map"></div>
+<form action="/addProperty" method="post">
+
+    <p class="header">Mekanınızın</p>
+    <div id="marker"></div></br>
+    <p class="header"> tam yerine taşıyın </p>
+      <p id="demo"> </p>
+    <div >
+
+        <label>Plaka kodu</label>
+        <input id="inputPlaka" name="propertyPlate"></input>
+        <label>İlçe</label>
+        <input id="inputIlce" name="propertyPlace"></input><br>
+        <label>Mekan Adı</label>
+        <input id="inputAdi" name="propertyName"></input><br>
+       <label>İletişim numarası </label>
+        <input id="inputTelefon" type="tel" name="propertyNumber"></input> 
+        <label>İletişime geçilecek kişi</label>
+        <input id="inputOwnerName" type="tel" name="propertyOwner"></input> <br>  
+        <label>Detaylı Adres</label>
+        <textarea id="txtAdres" name="propertyAdress"></textarea> 
+        <label>Mail Adresi</label>
+        <input id="inputMail" type="email" name="propertyMail"></input> <br>  
+        <br> 
+        <label>Enlem</label>
+        <input id="inputEnlem" name="propertyEnlem" ></input>  
+        <label>Boylam</label>
+        <input id="inputBoylam" name="propertyBoylam"></input><br>  
+        
+      
+        
+        <button id="btnEkle" type="submit">Yeni Mekan Ekleme Başvurusu yap</button>
+        
+	
+    </div>
+    </body>
+</form>
+    <script>
+ 
+function bindIller()
+{
+    $.getJSON("./iller",function(newData){     
+                $("#selectIlceler").empty();
+       
+              var select = document.getElementById("selectIller");
+              
+              for (var i = 0; i < newData.iller.length; i++) { 
+                 select.options[select.options.length] = new Option(newData.iller[i].il, i);
+              
+                }       
+
+          });    
+}
+
+
+    function bindIlceler()   {
+
+        $("#selectIlceler").empty();
+        
+     var intIl = Number(document.getElementById("selectIller").value);
+
+     var selectilcelerr = document.getElementById("selectIlceler");
+
+     var il = $("#selectIller option:selected").text();
+
+                  
+    
+     
+
+     intIl=intIl+1;
+    $.getJSON("./ilceler",function(newData2){ 
+            var y=0;
+              for (var i = 0; i < newData2.ilceler.length; i++) { 
+                
+                if(intIl==newData2.ilceler[i].il_id&&il!=newData2.ilceler[i].adi)  {
+                    console.log(intIl+"-"+newData2.ilceler[i].il_id);
+                selectilcelerr.options[selectilcelerr.options.length] 
+                = new Option(newData2.ilceler[i].adi,y);
+                    y++; }
+                
+                       
+            }
+          
+
+          }); 
+      
+        }
+
+        function goArea()   {
+
+
+    var intIl = Number(document.getElementById("selectIller").value);
+    intIl=intIl+1;
+
+ var selectedIlce=$( "#selectIlceler option:selected" ).text();
+ $('input[name=propertyPlace]').val(selectedIlce);
+
+   
+var enlem;
+var boylam;
+
+
+$.getJSON("./ilceler",function(newData3){ 
+            var y=0;
+              for (var i = 0; i < newData3.ilceler.length; i++) {  
+                  if(intIl==newData3.ilceler[i].il_id&&selectedIlce==newData3.ilceler[i].adi)  {
+                    enlem=newData3.ilceler[i].enlem;
+                    boylam=newData3.ilceler[i].boylam; 
+                    break;               }       
+
+          }
+          haritaMerkezi(enlem,boylam);
+
+              
+        });
+ 
+}
+        </script>
+	</html>
+
+
+
